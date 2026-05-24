@@ -1,8 +1,10 @@
 import { useState, useEffect } from 'react';
 import { 
   Gamepad2, Search, Shuffle, ShieldCheck, Heart, 
-  Trash2, ShieldAlert, BadgePlus, EyeOff, Trophy
+  Trash2, ShieldAlert, BadgePlus, EyeOff, Trophy,
+  Play, Star
 } from 'lucide-react';
+import * as Icons from 'lucide-react';
 import defaultGames from './games.json';
 import { GameCard } from './components/GameCard.jsx';
 import { TheaterView } from './components/TheaterView.jsx';
@@ -18,6 +20,7 @@ export default function App() {
   const [games, setGames] = useState([]);
   const [favorites, setFavorites] = useState([]);
   const [ratedGames, setRatedGames] = useState([]);
+  const [lastPlayedId, setLastPlayedId] = useState(null);
 
   // Navigation / Search / Visual Filter states
   const [searchQuery, setSearchQuery] = useState('');
@@ -96,6 +99,12 @@ export default function App() {
       try {
         setRatedGames(JSON.parse(localRatedKeys));
       } catch (e) {}
+    }
+
+    // 5. Load last played game ID
+    const savedLastPlayed = localStorage.getItem('mathpractice_last_played');
+    if (savedLastPlayed) {
+      setLastPlayedId(savedLastPlayed);
     }
   }, []);
 
@@ -184,11 +193,18 @@ export default function App() {
     localStorage.setItem('unblocked_favorites', JSON.stringify(updated));
   };
 
+  // Handle game select actions
+  const handleSelectGame = (game) => {
+    setRunningGame(game);
+    setLastPlayedId(game.id);
+    localStorage.setItem('mathpractice_last_played', game.id);
+  };
+
   // Run random game utility
   const handlePlayRandom = () => {
     if (games.length === 0) return;
     const randomIndex = Math.floor(Math.random() * games.length);
-    setRunningGame(games[randomIndex]);
+    handleSelectGame(games[randomIndex]);
   };
 
   // Add custom unblocked game URL
@@ -296,6 +312,15 @@ export default function App() {
   // Calculate live cumulative playing dashboard statistics
   const totalLibraryPlays = games.reduce((acc, curr) => acc + curr.plays, 0);
   const userAddedCount = games.filter((g) => g.isCustom).length;
+
+  // Resolve last played game details from loaded inventory list
+  const lastPlayedGame = games.find((g) => g.id === lastPlayedId);
+
+  // Quick helper to draw dynamic Lucide icons inside last played
+  function LastPlayedIcon({ name, className }) {
+    const IconComponent = Icons[name] || Gamepad2;
+    return <IconComponent className={className} />;
+  }
 
   // Filter and compute active query lists
   const filteredGames = games.filter((g) => {
@@ -410,6 +435,67 @@ export default function App() {
                 </button>
               </div>
             </header>
+
+            {/* Last Played Game Section */}
+            {lastPlayedGame && (
+              <div className="bg-[#09090c] border border-zinc-900 rounded p-4 shadow-md flex flex-col md:flex-row items-center justify-between gap-4 select-none mb-6 relative overflow-hidden group">
+                {/* Ambient glow accent */}
+                <div className="absolute top-0 right-0 w-32 h-32 bg-rose-600/5 rounded-full pointer-events-none blur-2xl group-hover:bg-rose-600/10 transition-all duration-300" />
+                
+                <div className="flex items-center space-x-3.5 z-10 w-full md:w-auto">
+                  {/* Thumbnail / Icon slot */}
+                  <div className="w-10 h-10 rounded bg-[#121216] border border-zinc-900 group-hover:border-rose-500/40 flex items-center justify-center text-rose-500 relative overflow-hidden shrink-0 transition-all duration-300">
+                    <div className="absolute inset-0 opacity-[0.05] bg-[linear-gradient(to_right,#808080_1px,transparent_1px),linear-gradient(to_bottom,#808080_1px,transparent_1px)] bg-[size:4px_4px]" />
+                    {lastPlayedGame.game_image_icon ? (
+                      <img 
+                        src={lastPlayedGame.game_image_icon} 
+                        alt={`${lastPlayedGame.title} Icon`} 
+                        referrerPolicy="no-referrer"
+                        className="w-full h-full object-cover relative z-10 transition-transform duration-300 group-hover:scale-105"
+                        onError={(e) => {
+                          e.target.style.display = 'none';
+                          if (e.target.nextSibling) e.target.nextSibling.style.display = 'block';
+                        }}
+                      />
+                    ) : null}
+                    <div style={{ display: lastPlayedGame.game_image_icon ? 'none' : 'block' }} className="relative z-10">
+                      <LastPlayedIcon name={lastPlayedGame.icon} className="w-5 h-5 transition-transform duration-300 group-hover:scale-110" />
+                    </div>
+                  </div>
+
+                  <div>
+                    <span className="text-[9px] font-mono uppercase tracking-widest text-rose-500 font-bold block mb-0.5">
+                      ✦ RESUME SESSION - LAST PLAYED
+                    </span>
+                    <div className="flex flex-wrap items-center gap-2">
+                      <h2 className="text-sm font-bold text-white tracking-tight leading-none">{lastPlayedGame.title}</h2>
+                      <span className="text-[9px] font-mono text-zinc-400 bg-zinc-950 px-1.5 py-0.2 border border-zinc-900 rounded font-bold uppercase">{lastPlayedGame.category}</span>
+                    </div>
+                  </div>
+                </div>
+
+                <div className="flex items-center gap-4 z-10 w-full md:w-auto justify-between md:justify-end">
+                  <div className="flex items-center gap-3.5 text-right font-mono text-[10px] text-zinc-500">
+                    <div className="flex items-center gap-1">
+                      <Star size={10} className="text-yellow-500 fill-yellow-500" />
+                      <span>{lastPlayedGame.rating.toFixed(1)}</span>
+                    </div>
+                    <div className="flex items-center gap-1">
+                      <Play size={10} className="text-rose-500" />
+                      <span>{lastPlayedGame.plays.toLocaleString()} plays</span>
+                    </div>
+                  </div>
+
+                  <button
+                    onClick={() => handleSelectGame(lastPlayedGame)}
+                    className="bg-zinc-950 hover:bg-rose-600 hover:text-black border border-zinc-855 hover:border-rose-600 text-zinc-300 text-xs py-1.5 px-4 rounded font-mono font-bold transition-all duration-250 shadow flex items-center justify-center gap-1.5 cursor-pointer"
+                  >
+                    <Play size={11} className="fill-current" />
+                    <span>Instant Resume</span>
+                  </button>
+                </div>
+              </div>
+            )}
 
             {/* Core Grid layouts */}
             <main className="grid grid-cols-1 lg:grid-cols-4 gap-6 mt-6">
@@ -548,7 +634,7 @@ export default function App() {
                         <GameCard 
                           game={game}
                           isFavorite={favorites.includes(game.id)}
-                          onSelect={setRunningGame}
+                          onSelect={handleSelectGame}
                           onToggleFavorite={handleToggleFavorite}
                         />
 
