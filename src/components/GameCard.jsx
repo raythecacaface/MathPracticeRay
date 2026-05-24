@@ -29,7 +29,22 @@ export function GameCard({ game, isFavorite, onSelect, onToggleFavorite }) {
             {/* Retro grid pattern overlay */}
             <div className="absolute inset-0 opacity-[0.1] bg-[linear-gradient(to_right,#808080_1px,transparent_1px),linear-gradient(to_bottom,#808080_1px,transparent_1px)] bg-[size:4px_4px]" />
             
-            <DynamicIcon name={game.icon} className="w-5 h-5 relative z-10 transition-transform duration-300 group-hover:scale-110" />
+            {game.game_image_icon ? (
+              <img 
+                src={game.game_image_icon} 
+                alt={`${game.title} Icon`} 
+                referrerPolicy="no-referrer" 
+                className="w-full h-full object-cover relative z-10 transition-transform duration-300 group-hover:scale-110"
+                onError={(e) => {
+                  // Fallback to text icon if image URL fails
+                  e.target.style.display = 'none';
+                  e.target.nextSibling.style.display = 'block';
+                }}
+              />
+            ) : null}
+            <div style={{ display: game.game_image_icon ? 'none' : 'block' }} className="relative z-10">
+              <DynamicIcon name={game.icon} className="w-5 h-5 transition-transform duration-300 group-hover:scale-110" />
+            </div>
             
             {/* Custom Game Badge indicator */}
             {game.isCustom && (

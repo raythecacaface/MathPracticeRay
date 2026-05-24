@@ -37,16 +37,27 @@ export function AddGameModal({ isOpen, onClose, onAddGame }) {
       return;
     }
 
+    // Parse raw <iframe> inputs or urls
+    let finalizedUrl = iframeUrl.trim();
+    if (finalizedUrl.includes('<iframe') && finalizedUrl.includes('src=')) {
+      const matchSrc = finalizedUrl.match(/src=["']([^"']+)["']/i);
+      if (matchSrc && matchSrc[1]) {
+        finalizedUrl = matchSrc[1];
+      }
+    }
+
+    // Clean html entities in query parameters like &amp;
+    finalizedUrl = finalizedUrl.replace(/&amp;/g, '&');
+
     // Direct url validation
-    if (!iframeUrl.startsWith('http://') && !iframeUrl.startsWith('https://')) {
-      setFormError('Embed link must start with http:// or https://');
+    if (!finalizedUrl.startsWith('http://') && !finalizedUrl.startsWith('https://')) {
+      setFormError('Embed link must start with http:// or https:// (or contain a valid <iframe> src attribute)');
       return;
     }
 
     // Auto-enrich Scratch URLs if the user just pastes standard project URLs instead of embeds
-    let finalizedUrl = iframeUrl;
-    if (iframeUrl.includes('scratch.mit.edu/projects/') && !iframeUrl.includes('/embed/')) {
-      const match = iframeUrl.match(/projects\/(\d+)/);
+    if (finalizedUrl.includes('scratch.mit.edu/projects/') && !finalizedUrl.includes('/embed/')) {
+      const match = finalizedUrl.match(/projects\/(\d+)/);
       if (match && match[1]) {
         finalizedUrl = `https://scratch.mit.edu/projects/embed/${match[1]}/`;
       }

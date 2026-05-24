@@ -1,5 +1,5 @@
 {
-  "name": "Unblocked Games Portal",
+  "name": "Mathpracticeforray",
   "description": "A premium red and black themed game portal featuring curated unblocked games with custom iframe embedding, search, collections, and custom game submission capabilities.",
   "requestFramePermissions": [],
   "majorCapabilities": ["MAJOR_CAPABILITY_SERVER_SIDE_GEMINI_API"]

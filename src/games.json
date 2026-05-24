@@ -1,83 +1,46 @@
 [
   {
-    "id": "paper-minecraft",
-    "title": "Paper Minecraft (2D Clone)",
-    "category": "Adventure",
-    "description": "A legendary 2D fan-made clone of Minecraft by Griffpatch. Play craft, build, and survive in singleplayer or custom maps.",
-    "iframeUrl": "https://scratch.mit.edu/projects/embed/11562137/",
-    "isScratch": true,
-    "plays": 14208,
-    "rating": 4.8,
-    "icon": "Gamepad2"
-  },
-  {
-    "id": "classic-tetris",
-    "title": "React Tetris",
-    "category": "Puzzle",
-    "description": "Compete with yourself in this ultra-smooth, retro-inspired brick-sorting classic. Features clean mechanics and high-speed drops.",
-    "iframeUrl": "https://chvin.github.io/react-tetris/",
-    "plays": 9840,
-    "rating": 4.7,
-    "icon": "Grid"
-  },
-  {
-    "id": "sandspiel",
-    "title": "Sandspiel Physics Toy",
-    "category": "Simulator",
-    "description": "An interactive sand physics sandbox. Mix elements like fire, water, wind, plants, and acid to watch natural reactions and crazy explosions.",
-    "iframeUrl": "https://sandspiel.club/",
-    "plays": 12053,
+    "id": "retro-bowl",
+    "title": "Retro Bowl",
+    "description": "The ultimate classic pixel-art American football management and arcade simulation game. Play, pass, score touchdowns, and lead your team to championship glory.",
+    "category": "Retro",
+    "icon": "Trophy",
+    "plays": 354200,
     "rating": 4.9,
-    "icon": "Flame"
+    "iframeUrl": "https://hfmanor.com/retro-bowl",
+    "game_image_icon": "https://hfmanor.com/image/retro-bowl"
   },
   {
-    "id": "hextris",
-    "title": "Hextris Deluxe",
-    "category": "Puzzle",
-    "description": "Rotate the central hexagon to stack colored blocks. Clear lines by matching 3 or more blocks of the same color.",
-    "iframeUrl": "https://hextris.io/",
-    "plays": 6512,
-    "rating": 4.5,
-    "icon": "Hexagon"
-  },
-  {
-    "id": "flappy-bird",
-    "title": "Flappy Bird HTML5",
+    "id": "subway-surfers",
+    "title": "Subway Surfers",
+    "description": "Run as fast as you can, dodge oncoming trains, and escape the grumpy inspector and his dog in this end-less runner classic.",
     "category": "Arcade",
-    "description": "The addictive classic flappy survival game. Tap or press Space/Left Click to flap your wings and navigate between pipes.",
-    "iframeUrl": "https://wayou.github.io/FlappyBird-html5/",
-    "plays": 15890,
-    "rating": 4.3,
-    "icon": "Activity"
+    "icon": "Gamepad2",
+    "plays": 489100,
+    "rating": 4.8,
+    "iframeUrl": "https://hfmanor.com/subway-surfers",
+    "game_image_icon": "https://hfmanor.com/image/subway-surfers"
   },
   {
-    "id": "retro-pacman",
-    "title": "Retro Pacman Clone",
-    "category": "Retro",
-    "description": "Dodge the ghosts, eat the dots, and rack up highscores in this faithful adaptation of the classic arcade maze game.",
-    "iframeUrl": "https://retro-pacman.github.io/",
-    "plays": 11043,
-    "rating": 4.6,
-    "icon": "CircleDot"
+    "id": "slope-2",
+    "title": "Slope 2",
+    "description": "Navigate a high-speed ball down steep, futuristic neon slopes. Dodge moving obstacles, collect rewards, and survive as long as you can!",
+    "category": "Arcade",
+    "icon": "TrendingUp",
+    "plays": 512400,
+    "rating": 4.9,
+    "iframeUrl": "https://hfmanor.com/slope-2",
+    "game_image_icon": "https://hfmanor.com/image/slope-2"
   },
   {
-    "id": "asteroids",
-    "title": "Vector Asteroids",
-    "category": "Retro",
-    "description": "Fly a triangular spaceship through an asteroid field. Shoot down space rocks and avoid collision in vector graphics space.",
-    "iframeUrl": "https://jakesgordon.github.io/javascript-asteroids/",
-    "plays": 5422,
-    "rating": 4.4,
-    "icon": "Rocket"
-  },
-  {
-    "id": "space-invaders",
-    "title": "Classic Space Invaders",
-    "category": "Retro",
-    "description": "Defend the planet from rows of encroaching alien spaceships. Hide behind shields and launch firing volleys.",
-    "iframeUrl": "https://codeheir.github.io/space-invaders/",
-    "plays": 7890,
-    "rating": 4.5,
-    "icon": "ShieldAlert"
+    "id": "cookie-clicker",
+    "title": "Cookie Clicker",
+    "description": "Bake millions of delicious cookies by clicking on a giant cookie, buying upgrades, hiring grandmas, and constructing portals to other dimensions!",
+    "category": "Casual",
+    "icon": "Sparkles",
+    "plays": 659800,
+    "rating": 4.9,
+    "iframeUrl": "https://hfmanor.com/cookie-clicker",
+    "game_image_icon": "https://hfmanor.com/image/cookie-clicker"
   }
 ]

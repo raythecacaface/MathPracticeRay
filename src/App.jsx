@@ -30,10 +30,13 @@ export default function App() {
   // Tactical Camouflage / Stealth configurations
   const [isDisguiseArmed, setIsDisguiseArmed] = useState(false);
   const [disguiseType, setDisguiseType] = useState('google-docs');
-  const [customTabName, setCustomTabName] = useState('AP Euro History - Chapter 12 Notes');
+  const [customTabName, setCustomTabName] = useState('Calculus II Continuity Notes');
 
-  // Load and merge default presets with local user-injected feeds
+
+  // Initialize title and merge default presets with local user-injected feeds on load
   useEffect(() => {
+    document.title = 'Mathpracticeforray';
+
     // 1. Initialize custom games from Local Storage
     const localCustomStr = localStorage.getItem('unblocked_custom_games');
     let customList = [];
@@ -116,7 +119,13 @@ export default function App() {
     
     // Choose appropriate title
     if (disguiseType === 'google-docs') {
-      document.title = `${customTabName || 'AP Euro History - Chapter 12 Notes'} - Google Docs`;
+      document.title = `${customTabName || 'Calculus II Continuity Notes'} - Google Docs`;
+    } else if (disguiseType === 'google-slides') {
+      document.title = `${customTabName || 'Calculus Review Limits Sheet'} - Google Slides`;
+    } else if (disguiseType === 'google-sheets') {
+      document.title = `${customTabName || 'Calculus Homework Ledger'} - Google Sheets`;
+    } else if (disguiseType === 'geogebra') {
+      document.title = 'GeoGebra Graphing Calculator - Free Online Math Tool';
     } else if (disguiseType === 'khan-academy') {
       document.title = 'Riemann Sums Definite Integral | Lesson | Khan Academy';
     } else {
@@ -136,6 +145,12 @@ export default function App() {
 
     if (disguiseType === 'google-docs') {
       faviconLink.href = 'https://ssl.gstatic.com/docs/documents/images/kix-favicon-2023q4.ico';
+    } else if (disguiseType === 'google-slides') {
+      faviconLink.href = 'https://ssl.gstatic.com/docs/presentations/images/slides-favicon-2023q4.ico';
+    } else if (disguiseType === 'google-sheets') {
+      faviconLink.href = 'https://ssl.gstatic.com/docs/spreadsheets/images/spreadsheets-favicon-2023q4.ico';
+    } else if (disguiseType === 'geogebra') {
+      faviconLink.href = 'https://www.geogebra.org/favicon.ico';
     } else if (disguiseType === 'khan-academy') {
       faviconLink.href = 'https://www.khanacademy.org/favicon.ico';
     } else {
@@ -145,7 +160,7 @@ export default function App() {
 
   const disarmDisguise = () => {
     setIsDisguiseArmed(false);
-    document.title = 'Unblocked Games Portal';
+    document.title = 'Mathpracticeforray';
     
     let faviconLink = document.querySelector("link[rel~='icon']");
     if (faviconLink && window._savedPrevIcon) {
@@ -154,6 +169,7 @@ export default function App() {
       faviconLink.href = '/favicon.ico';
     }
   };
+
 
   // Toggle user game favorite state
   const handleToggleFavorite = (gameId, e) => {
@@ -341,15 +357,16 @@ export default function App() {
                 <div>
                   <div className="flex items-center space-x-2">
                     <h1 className="text-xl sm:text-2xl font-black tracking-wider text-white uppercase">
-                      UNBLOCKED<span className="text-rose-600">HUB</span>
+                      MATHPRACTICEFOR<span className="text-rose-600">RAY</span>
                     </h1>
                     <span className="hidden sm:inline bg-rose-955/20 text-rose-500 border border-rose-500/30 px-1.5 py-0.2 rounded font-mono font-black text-[9px] tracking-widest uppercase animate-pulse">
                       PORTAL ARMED
                     </span>
                   </div>
                   <p className="text-[11px] text-zinc-400 mt-0.5">
-                    Zero latency direct iframe emulators with emergency escape parachute switches.
+                    Zero latency direct iframe algebra and calculus simulator portal for Ray with quick camouflage parachute switches.
                   </p>
+
                 </div>
               </div>
 
@@ -374,9 +391,13 @@ export default function App() {
                     onChange={(e) => setDisguiseType(e.target.value)}
                   >
                     <option className="bg-[#09090c] text-zinc-300" value="google-docs">Google Docs</option>
+                    <option className="bg-[#09090c] text-zinc-300" value="google-slides">Google Slides</option>
+                    <option className="bg-[#09090c] text-zinc-300" value="google-sheets">Google Sheets</option>
                     <option className="bg-[#09090c] text-zinc-300" value="khan-academy">Khan Academy</option>
                     <option className="bg-[#09090c] text-zinc-300" value="canvas">Canvas LMS</option>
+                    <option className="bg-[#09090c] text-zinc-300" value="geogebra">GeoGebra Math</option>
                   </select>
+
                 </div>
 
                 {/* Add custom file direct embed trigger */}
@@ -459,7 +480,7 @@ export default function App() {
                       <span className="bg-rose-955/20 border border-rose-500/20 text-rose-500 font-bold px-1.5 py-0.2 rounded font-sans tracking-wide">ESC KEY</span>
                     </div>
                     <div className="mt-1 pb-1 border-t border-zinc-955 pt-1.5 flex flex-col gap-1">
-                      <label className="text-[9px] text-zinc-500 uppercase font-semibold">Custom Doc Tab Name:</label>
+                      <label className="text-[9px] text-zinc-500 uppercase font-semibold">Custom Doc/Slide Title:</label>
                       <input
                         type="text"
                         className="bg-zinc-950 text-xs text-zinc-300 px-2 py-1 rounded outline-none border border-zinc-900 focus:border-rose-600 text-[11px]"
@@ -467,6 +488,7 @@ export default function App() {
                         onChange={(e) => setCustomTabName(e.target.value)}
                         placeholder="e.g. Science Homework"
                       />
+
                     </div>
                   </div>
 

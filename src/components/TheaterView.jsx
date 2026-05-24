@@ -1,5 +1,6 @@
 import { useState, useEffect, useRef } from 'react';
 import { ArrowLeft, RotateCw, Maximize2, Sparkles, AlertTriangle, Monitor, ExternalLink, Moon, Sun, Star } from 'lucide-react';
+import { resolvePlayableUrl } from '../utils/url.js';
 
 export function TheaterView({
   game,
@@ -9,7 +10,7 @@ export function TheaterView({
   hasRatedBefore,
 }) {
   const [isDimmed, setIsDimmed] = useState(false);
-  const [isWide, setIsWide] = useState(true);
+  const [sizeMode, setSizeMode] = useState('theater'); // Default to larger "theater" mode as requested
   const [iframeKey, setIframeKey] = useState(0); // To force reload
   const [userRating, setUserRating] = useState(null);
   const [isHoveringStars, setIsHoveringStars] = useState(null);
@@ -44,9 +45,20 @@ export function TheaterView({
     onUpdateRating(game.id, stars);
   };
 
+  // Calculate dynamic max-width for the playing session grid
+  const getContainerMaxWidth = () => {
+    switch (sizeMode) {
+      case 'standard': return 'max-w-4xl';
+      case 'cinema': return 'max-w-6xl';
+      case 'theater': return 'max-w-[1380px]';
+      case 'giant': return 'max-w-full lg:px-8';
+      default: return 'max-w-6xl';
+    }
+  };
+
   return (
     <div className={`transition-colors duration-500 min-h-screen pb-16 ${isDimmed ? 'bg-black' : 'bg-[#030304]'}`}>
-      <div className="max-w-6xl mx-auto px-4 pt-4">
+      <div className={`${getContainerMaxWidth()} mx-auto px-4 pt-4 transition-all duration-300`}>
         {/* Top Header HUD and controls */}
         <div className="bg-[#09090c] border border-zinc-900 rounded-lg p-3 flex flex-col md:flex-row md:items-center justify-between gap-4 mb-4 shadow-lg relative z-25">
           <div className="flex items-center space-x-3">
@@ -76,7 +88,7 @@ export function TheaterView({
           <div className="flex flex-wrap items-center gap-1.5 bg-zinc-950 p-1 rounded border border-zinc-900">
             {/* Direct Open */}
             <a
-              href={game.iframeUrl}
+              href={resolvePlayableUrl(game.iframeUrl)}
               target="_blank"
               rel="noopener noreferrer"
               className="flex items-center gap-1 px-2.5 py-1.5 bg-zinc-900 hover:bg-zinc-800 text-zinc-300 hover:text-white rounded text-xs font-mono transition-colors"
@@ -96,15 +108,28 @@ export function TheaterView({
               <span>{isDimmed ? 'Un-Dim' : 'Dim Lights'}</span>
             </button>
 
-            {/* Aspect Size Toggle */}
-            <button
-              onClick={() => setIsWide(!isWide)}
-              className={`flex items-center gap-1 px-2.5 py-1.5 rounded text-xs font-mono transition-all ${isWide ? 'bg-zinc-900 text-white' : 'bg-zinc-950 text-neutral-500'}`}
-              title="Toggle cinematic widescreen layout"
-            >
-              <Monitor size={11} className="text-rose-500" />
-              <span>{isWide ? 'Cinema' : 'Standard'}</span>
-            </button>
+            {/* Responsive Screen Size Selection Buttons */}
+            <div className="flex items-center bg-zinc-950 px-1 py-1 rounded border border-zinc-905 gap-1" title="Select game layout screen size">
+              <span className="text-[9px] text-zinc-500 font-mono uppercase px-1.5 font-bold">Size:</span>
+              {[
+                { id: 'standard', label: 'Std' },
+                { id: 'cinema', label: 'Cinema' },
+                { id: 'theater', label: 'Theater' },
+                { id: 'giant', label: 'Giant (75vh)' }
+              ].map((sz) => (
+                <button
+                  key={sz.id}
+                  onClick={() => setSizeMode(sz.id)}
+                  className={`px-2 py-1 text-[10px] font-mono rounded font-bold transition-all ${
+                    sizeMode === sz.id 
+                      ? 'bg-rose-600 text-black shadow-sm font-black' 
+                      : 'bg-zinc-900 border border-zinc-850 text-zinc-400 hover:text-zinc-200 hover:bg-zinc-800'
+                  }`}
+                >
+                  {sz.label}
+                </button>
+              ))}
+            </div>
 
             {/* Reload State */}
             <button
@@ -128,15 +153,21 @@ export function TheaterView({
         </div>
 
         {/* The Frame Theater Wrapper */}
-        <div className={`transition-all duration-500 mx-auto ${isWide ? 'max-w-full' : 'max-w-5xl'}`}>
-          <div className="relative aspect-video w-full rounded bg-black border border-zinc-900 hover:border-rose-600 transition-shadow duration-300 group shadow-2xl">
+        <div className="transition-all duration-500 mx-auto w-full">
+          <div className={`relative rounded bg-black border border-zinc-900 hover:border-rose-600 transition-all duration-300 group shadow-2xl overflow-hidden ${
+            sizeMode === 'giant' 
+              ? 'h-[75vh] min-h-[550px] aspect-auto' 
+              : sizeMode === 'theater'
+              ? 'aspect-[16/10] w-full'
+              : 'aspect-video w-full'
+          }`}>
             {/* Decorative Scanlines */}
             <div className="absolute inset-0 scanlines pointer-events-none opacity-[0.03]" />
 
             <iframe
               key={iframeKey}
               ref={iframeRef}
-              src={game.iframeUrl}
+              src={resolvePlayableUrl(game.iframeUrl)}
               className="w-full h-full border-none outline-none relative z-10 bg-black"
               title={game.title}
               allow="autoplay; gamepad; fullscreen; focus-without-user-activation *"
